@@ -1,33 +1,20 @@
-import { Button } from "@heroui/react";
-import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import { contactFormSchema, useAppForm } from "#/hooks/contact-us.form";
 import { createFileRoute } from "@tanstack/react-router";
-import { TextInput, Textarea } from "@mantine/core";
 
 export const Route = createFileRoute("/contact-us")({
   component: RouteComponent,
 });
 
-const { fieldContext, formContext } = createFormHookContexts();
-
-const { useAppForm } = createFormHook({
-  fieldComponents: {
-    TextInput,
-    Textarea,
-  },
-  formComponents: {
-    Button,
-  },
-  fieldContext,
-  formContext,
-});
-
 function RouteComponent() {
-  const form = useAppForm({
+  const contactForm = useAppForm({
     defaultValues: {
       name: "",
       email: "",
       orderNumber: "",
       description: "",
+    },
+    validators: {
+      onChange: contactFormSchema,
     },
     onSubmit: ({ value }) => {
       alert(JSON.stringify(value, null, 2));
@@ -49,11 +36,11 @@ function RouteComponent() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              form.handleSubmit();
+              contactForm.handleSubmit();
             }}
             className="space-y-5"
           >
-            <form.AppField
+            <contactForm.AppField
               name="name"
               children={(field) => (
                 <field.TextInput
@@ -64,7 +51,7 @@ function RouteComponent() {
                 />
               )}
             />
-            <form.AppField
+            <contactForm.AppField
               name="email"
               children={(field) => (
                 <field.TextInput
@@ -75,26 +62,27 @@ function RouteComponent() {
                 />
               )}
             />
-            <form.AppField
+            <contactForm.AppField
               name="orderNumber"
               children={(field) => (
                 <field.TextInput size="md" label="Order number" />
               )}
             />
-            <form.AppField
+            <contactForm.AppField
               name="description"
               children={(field) => (
                 <field.Textarea
                   size="md"
+                  resize="vertical"
                   label="Description"
                   placeholder="What can we do for you?"
                   withAsterisk
                 />
               )}
             />
-            <form.AppForm>
-              <form.Button type="submit">Submit</form.Button>
-            </form.AppForm>
+            <contactForm.AppForm>
+              <contactForm.Button type="submit">Submit</contactForm.Button>
+            </contactForm.AppForm>
           </form>
         </div>
       </div>

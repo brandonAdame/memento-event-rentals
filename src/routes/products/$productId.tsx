@@ -7,6 +7,7 @@ import { Accordion, Button } from "@heroui/react";
 import { Select } from "@mantine/core";
 import { ChevronDown, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "#/context/CartContext";
 
 const items = [
   {
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/products/$productId")({
 });
 
 function RouteComponent() {
+  const { addToCart } = useCart();
   const [numberOfItems, setNumberOfItems] = useState<number | null>(1);
 
   return (
@@ -108,7 +110,16 @@ function RouteComponent() {
             />
 
             {/* Right segment: Add to Cart */}
-            <Button>
+            <Button
+              onClick={() =>
+                addToCart({
+                  id: "1",
+                  name: "1940s Antique Chair",
+                  price: 50.0,
+                  quantity: numberOfItems || 1,
+                })
+              }
+            >
               <ShoppingCart size={16} />
               Add to cart
             </Button>

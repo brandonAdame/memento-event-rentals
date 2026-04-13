@@ -2,12 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, Modal } from "@heroui/react";
 import { PackageOpen, Feather } from "lucide-react";
 import FurnitureImg from "/images/antique-furniture.jpg";
+import { useCart } from "#/context/CartContext";
 
 export const Route = createFileRoute("/inventory")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { addToCart } = useCart();
   const openQuickViewModal = () => (
     <Modal>
       <Button variant="outline">
@@ -62,7 +64,18 @@ function RouteComponent() {
                 </Card.Description>
               </Card.Header>
               <Card.Footer className="flex items-center justify-between">
-                <Button>Add to cart</Button>
+                <Button
+                  onClick={() =>
+                    addToCart({
+                      id: "2",
+                      name: "Antique Chair",
+                      price: 199.99,
+                      quantity: 1,
+                    })
+                  }
+                >
+                  Add to cart
+                </Button>
                 {openQuickViewModal()}
               </Card.Footer>
             </div>

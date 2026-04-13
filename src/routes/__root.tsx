@@ -16,6 +16,7 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
+import { CartProvider } from "#/context/CartContext";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -56,23 +57,25 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
         <TanStackQueryProvider>
-          <MantineProvider>
-            <Header />
-            {children}
-            <Footer />
-            <TanStackDevtools
-              config={{
-                position: "bottom-right",
-              }}
-              plugins={[
-                {
-                  name: "Tanstack Router",
-                  render: <TanStackRouterDevtoolsPanel />,
-                },
-                TanStackQueryDevtools,
-              ]}
-            />
-          </MantineProvider>
+          <CartProvider>
+            <MantineProvider>
+              <Header />
+              {children}
+              <Footer />
+              <TanStackDevtools
+                config={{
+                  position: "bottom-right",
+                }}
+                plugins={[
+                  {
+                    name: "Tanstack Router",
+                    render: <TanStackRouterDevtoolsPanel />,
+                  },
+                  TanStackQueryDevtools,
+                ]}
+              />
+            </MantineProvider>
+          </CartProvider>
         </TanStackQueryProvider>
         <Scripts />
       </body>

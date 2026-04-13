@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Badge, Drawer, Button } from "@heroui/react";
-import { ShoppingCart, Wallet } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import CartDrawer from "./cart/CartDrawer";
 
 export default function Header() {
   return (
@@ -22,7 +21,7 @@ export default function Header() {
             href="https://x.com/tan_stack"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-xl p-2 text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)] sm:block"
+            className="hidden rounded-xl p-2 text-(--sea-ink-soft) transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink) sm:block"
           >
             <span className="sr-only">Follow TanStack on X</span>
             <svg viewBox="0 0 16 16" aria-hidden="true" width="24" height="24">
@@ -36,7 +35,7 @@ export default function Header() {
             href="https://github.com/TanStack"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-xl p-2 text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)] sm:block"
+            className="hidden rounded-xl p-2 text-(--sea-ink-soft) transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink) sm:block"
           >
             <span className="sr-only">Go to TanStack GitHub</span>
             <svg viewBox="0 0 16 16" aria-hidden="true" width="24" height="24">
@@ -81,33 +80,7 @@ export default function Header() {
           </Link>
         </div>
         <div className="order-4 ml-auto">
-          <Drawer>
-            <Badge.Anchor>
-              <Button variant="outline">
-                <ShoppingCart />
-                <Badge color="accent" size="sm">
-                  5
-                </Badge>
-              </Button>
-            </Badge.Anchor>
-            <Drawer.Backdrop>
-              <Drawer.Content placement="right">
-                <Drawer.Dialog>
-                  <Drawer.CloseTrigger />
-                  <Drawer.Header>
-                    <Drawer.Heading>Cart</Drawer.Heading>
-                  </Drawer.Header>
-                  <Drawer.Body>Items in your cart.</Drawer.Body>
-                  <Drawer.Footer>
-                    <Button>
-                      <Wallet />
-                      Check Out
-                    </Button>
-                  </Drawer.Footer>
-                </Drawer.Dialog>
-              </Drawer.Content>
-            </Drawer.Backdrop>
-          </Drawer>
+          <CartDrawer />
         </div>
       </nav>
     </header>
