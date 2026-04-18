@@ -57,7 +57,7 @@ function RouteComponent() {
             <div className="flex flex-1 flex-col gap-3">
               <Card.Header className="flex flex-col gap-3">
                 <Card.Title className="text-2xl text-(--sea-ink-soft)">
-                  Antique Chair
+                  1940s Antique Chair
                 </Card.Title>
                 <Card.Description>
                   Bright and colorful chair wonderful for pictures
@@ -67,9 +67,9 @@ function RouteComponent() {
                 <Button
                   onClick={() =>
                     addToCart({
-                      id: "2",
-                      name: "Antique Chair",
-                      price: 199.99,
+                      id: "1",
+                      name: "1940s Antique Chair",
+                      price: 50,
                       quantity: 1,
                     })
                   }

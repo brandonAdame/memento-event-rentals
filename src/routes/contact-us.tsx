@@ -47,6 +47,7 @@ function RouteComponent() {
                   size="md"
                   label="Name"
                   placeholder="Enter your name"
+                  onChange={(e) => field.handleChange(e.target.value)}
                   withAsterisk
                 />
               )}
@@ -58,6 +59,7 @@ function RouteComponent() {
                   size="md"
                   label="Email"
                   placeholder="Enter your email"
+                  onChange={(e) => field.handleChange(e.target.value)}
                   withAsterisk
                 />
               )}
@@ -65,7 +67,11 @@ function RouteComponent() {
             <contactForm.AppField
               name="orderNumber"
               children={(field) => (
-                <field.TextInput size="md" label="Order number" />
+                <field.TextInput
+                  size="md"
+                  label="Order number"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
               )}
             />
             <contactForm.AppField
@@ -76,13 +82,26 @@ function RouteComponent() {
                   resize="vertical"
                   label="Description"
                   placeholder="What can we do for you?"
+                  onChange={(e) => field.handleChange(e.target.value)}
                   withAsterisk
                 />
               )}
             />
-            <contactForm.AppForm>
-              <contactForm.Button type="submit">Submit</contactForm.Button>
-            </contactForm.AppForm>
+            <contactForm.Subscribe
+              selector={(state) => [
+                state.canSubmit,
+                state.isValid,
+                state.isPristine,
+              ]}
+              children={([canSubmit, isValid, isPristine]) => (
+                <contactForm.Button
+                  type="submit"
+                  isDisabled={!canSubmit || !isValid || isPristine}
+                >
+                  Submit
+                </contactForm.Button>
+              )}
+            />
           </form>
         </div>
       </div>
