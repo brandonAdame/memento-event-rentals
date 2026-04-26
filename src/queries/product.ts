@@ -27,9 +27,9 @@ query ProductQuery($handle: String) {
   }
 }`;
 
-export const getProducts = `#graphql
-query getProducts($first: Int) {
-    products(first: $first, reverse: true, query: "available_for_sale:true") {
+export const GET_PRODUCTS_QUERY = `#graphql
+query getProducts($first: Int, $after: String) {
+    products(first: $first, after: $after, reverse: true, query: "available_for_sale:true") {
       pageInfo {
         hasNextPage
         startCursor
@@ -62,4 +62,4 @@ query getProducts($first: Int) {
       }
     }
   }
-`;
+` as const;

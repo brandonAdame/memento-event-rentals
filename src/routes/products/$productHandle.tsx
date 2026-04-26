@@ -108,8 +108,8 @@ function RouteComponent() {
             <Button
               onClick={() =>
                 addToCart({
-                  id: "1",
-                  name: "1940s Antique Chair",
+                  id: productData.id,
+                  name: productData.title,
                   price: Number(productData.variants.nodes[0]?.price.amount),
                   quantity: numberOfItems || 1,
                 })
