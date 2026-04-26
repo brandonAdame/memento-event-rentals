@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import FurnitureImg from "/images/antique-furniture.jpg";
-import OldChair from "/images/chair-unsplash.jpg";
-import UrbanVintage from "/images/urban-vintage-unsplash.jpg";
-import UrbanVintage2 from "/images/urban-vintage2-unsplash.jpg";
 import { Accordion, Button } from "@heroui/react";
 import { Select } from "@mantine/core";
 import { ChevronDown, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "#/context/CartContext";
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { createStorefrontApiClient } from "@shopify/storefront-api-client";
+import { productQuery } from "#/queries/product";
+import type { Product } from "@shopify/hydrogen-react/storefront-api-types";
 
 const items = [
   {
@@ -27,81 +28,75 @@ const items = [
   },
 ];
 
-const inventory = [
-  {
-    label: "1",
-    value: 1,
-  },
-  {
-    label: "2",
-    value: 2,
-  },
-  {
-    label: "3",
-    value: 3,
-  },
-];
+const getProduct = createServerFn()
+  .inputValidator(z.object({ productHandle: z.string() }))
+  .handler<Promise<Product>>(async ({ data: { productHandle } }) => {
+    const client = createStorefrontApiClient({
+      storeDomain: "dev-test-store-20210635.myshopify.com",
+      apiVersion: "2026-04",
+      privateAccessToken: process.env.STOREFRONT_PRIVATE_TOKEN,
+    });
 
-export const Route = createFileRoute("/products/$productId")({
+    const { data: productData } = await client.request(productQuery, {
+      variables: {
+        handle: productHandle,
+      },
+    });
+
+    return productData.product;
+  });
+
+export const Route = createFileRoute("/products/$productHandle")({
   component: RouteComponent,
+  loader: async ({ params: { productHandle } }) =>
+    getProduct({ data: { productHandle } }),
 });
 
 function RouteComponent() {
   const { addToCart } = useCart();
   const [numberOfItems, setNumberOfItems] = useState<number | null>(1);
+  const productData = Route.useLoaderData();
 
   return (
     <div className="flex flex-col items-center gap-10 mt-10 page-wrap">
-      <h1 className="text-6xl display-title">1940s Antique Chair</h1>
+      <h1 className="text-6xl display-title">{productData.title}</h1>
       <div className="grid grid-cols-2 min-h-screen">
         {/* Scrollable photos section */}
-        <div className="flex flex-col space-y-5">
-          <img
-            alt="Antique chair"
-            aria-hidden="true"
-            src={FurnitureImg}
-            className=""
-          />
-          <img
-            alt="Antique chair"
-            aria-hidden="true"
-            src={OldChair}
-            className=""
-          />
-          <img
-            alt="Antique chair"
-            aria-hidden="true"
-            src={UrbanVintage}
-            className=""
-          />
-          <img
-            alt="Antique chair"
-            aria-hidden="true"
-            src={UrbanVintage2}
-            className=""
-          />
-        </div>
+        {(productData.images.edges || []).length > 0 && (
+          <div className="flex flex-col space-y-5">
+            {productData.images.edges.map((edge) => (
+              <img
+                key={edge.node.id}
+                src={edge.node.url}
+                alt={edge.node.altText ?? "Product image"}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Product description */}
         <div className="ml-32 flex flex-col gap-10 lg:max-w-140 sticky top-20 h-[calc(100vh-4rem)] z-40">
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold text-xl">Overview</h3>
-            <span>$50</span>
+            <span>
+              ${productData.variants.nodes[0]?.price.amount}{" "}
+              {productData.variants.nodes[0]?.price.currencyCode}
+            </span>
             <span className="underline">12 ratings</span>
           </div>
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold text-2xl">Description</h3>
-            <span>
-              Rent our Victorian-era antique chair for weddings, photo shoots,
-              and special events in the Raleigh-Durham and surrounding areas.
-              Featuring ornate carved details and original upholstery, this
-              one-of-a-kind piece adds instant elegance to any setting.
-            </span>
+            <span>{productData.description}</span>
           </div>
 
           <div className="flex items-center gap-4">
             <Select
-              data={inventory}
+              data={[...Array(productData.totalInventory).keys()].map(
+                (num) => ({
+                  label: String(num + 1),
+                  value: num + 1,
+                }),
+              )}
               value={numberOfItems}
               onChange={(val) => setNumberOfItems(val)}
               className="w-16"
@@ -115,7 +110,7 @@ function RouteComponent() {
                 addToCart({
                   id: "1",
                   name: "1940s Antique Chair",
-                  price: 50.0,
+                  price: Number(productData.variants.nodes[0]?.price.amount),
                   quantity: numberOfItems || 1,
                 })
               }
