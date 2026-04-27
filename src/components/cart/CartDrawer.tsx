@@ -37,13 +37,15 @@ export default function CartDrawer() {
                       <ButtonGroup>
                         <Button
                           isIconOnly
-                          onClick={() => updateCartQuantity("1", 1, "subtract")}
+                          onClick={() =>
+                            updateCartQuantity(item.id, 1, "subtract")
+                          }
                         >
                           <Minus size={16} />
                         </Button>
                         <ButtonGroup.Separator />
                         <Button
-                          onClick={() => updateCartQuantity("1", 1, "add")}
+                          onClick={() => updateCartQuantity(item.id, 1, "add")}
                         >
                           <Plus size={16} />
                         </Button>
@@ -51,7 +53,7 @@ export default function CartDrawer() {
                       <Button
                         variant="outline"
                         isIconOnly
-                        onClick={() => removeFromCart("1")}
+                        onClick={() => removeFromCart(item.id)}
                       >
                         <Trash2 size={16} />
                       </Button>

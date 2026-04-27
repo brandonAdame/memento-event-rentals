@@ -28,14 +28,6 @@ const getInventory = createServerFn()
 
 export const Route = createFileRoute("/inventory")({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    await context.queryClient.prefetchInfiniteQuery({
-      queryKey: ["inventory"],
-      queryFn: async ({ pageParam }) =>
-        getInventory({ data: { cursor: pageParam as string | undefined } }),
-      initialPageParam: undefined,
-    });
-  },
 });
 
 function RouteComponent() {
@@ -70,7 +62,7 @@ function RouteComponent() {
       <div className="grid grid-cols-3 gap-5">
         {/* create a 3-row grid that displays 9 items at a time */}
         {products.map((item: any, idx: number) => (
-          <Card key={item?.node?.id || idx} className="min-h-125">
+          <Card key={item?.id ?? idx} className="min-h-125">
             <Link
               to="/products/$productHandle"
               params={{ productHandle: item?.handle || "1" }}
@@ -100,7 +92,7 @@ function RouteComponent() {
                   addToCart({
                     id: item?.id || "1",
                     name: item?.title || "Product",
-                    price: 50,
+                    price: Number(item?.variants.nodes[0]?.price.amount),
                     quantity: 1,
                   })
                 }

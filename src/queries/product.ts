@@ -55,6 +55,14 @@ query getProducts($first: Int, $after: String) {
               }
             }
           }
+          variants(first: 1) {
+            nodes {
+              price {
+                amount
+                currencyCode
+              }
+            }
+          }
           totalInventory
           tags
           description
